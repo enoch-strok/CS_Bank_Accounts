@@ -1,0 +1,74 @@
+@model Container
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success</title>
+</head>
+
+<body>
+        <a style="font-size: 25px; margin-left: 90%;" href="/logout">Logout</a>
+
+    <header style="display: flex;">
+        <h2>Welcome, @Model.User.FirstName @Model.User.LastName</h2>
+        
+        <span style="margin-left: 4%; display: flex;">Current balance: <h5 style=" color: green; margin-left: 6px;width:150px; border: 2px solid black;">$@Model.User.Balance.ToString("0.00")</h5></span>
+
+    </header>
+    <main>
+        <form asp-action="Transaction" asp-controller="Home" method="POST">
+            <h3>Deposit/Withdraw</h3>
+            <label asp-for="OneTransaction.Amount"></label>
+            <input asp-for="OneTransaction.Amount" type="number">
+            <button>Submit</button>
+            <br>
+            <span style="margin-left: 2%; font-size: 20px; color: red;">@ViewBag.Error</span>
+            @* <h3>Deposit</h3>
+            <span>@ViewBag.Error</span>
+            <label asp-for="OneDeposit.Amount"></label>
+            <input asp-for="OneDeposit.Amount" type="number">
+            <button>Submit</button> *@
+        </form>
+        <section>
+            <h2 class="table-wrapper-scroll-y my-custom-scrollbar">Recent Transactions</h2>
+            <table class="table table-bordered table-striped mb-0">
+                <thead class="overflow-auto">
+                    <tr class="overflow-auto">
+                        <th>Activity</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Transaction transaction in Model.AllTransactions)
+                    {
+                        if (transaction.Amount >0){
+                            <tr class="deposit">
+                            <td style="color: green;"><h4>Deposit</h4>$@transaction.Amount.ToString("0.00")</td>
+                            <td>@transaction.CreatedAt.ToString("MMM d, yyyy: h:mm tt")</td>
+                        </tr>
+                        }
+                        else{
+                        <tr class="withdraw">
+                            <td style="color: red;"><h4>Withdraw</h4>$@transaction.Amount.ToString("0.00")</td>
+                            <td>@transaction.CreatedAt.ToString("MMM d, yyyy: h:mm tt")</td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+                @* <tbody>
+                    @foreach (Deposit deposit in Model.AllDeposits)
+                    {
+                        <tr>
+                            <td>$@deposit.Amount.ToString("0.00")</td>
+                            <td>@deposit.CreatedAt.ToString("MMM d, yyyy: h:mm tt")</td>
+                        </tr>
+                    }
+                </tbody> *@
+            </table>
+        </section>
+    </main>
+</body>
+
+</html>
